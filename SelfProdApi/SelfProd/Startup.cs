@@ -6,10 +6,14 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using SelfProd.Configurations;
+using SelfProd.Entities;
+using SelfProd.Middleware;
 
 namespace SelfProd
 {
@@ -25,7 +29,11 @@ namespace SelfProd
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.SetUpAutoMapper();
+            services.AddAllDependencies();
+            services.SetUpDatabase(Configuration);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddSwagger();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -40,7 +48,9 @@ namespace SelfProd
                 app.UseHsts();
             }
 
+            //app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseHttpsRedirection();
+            app.ConfigureAndUseSwagger();
             app.UseMvc();
         }
     }

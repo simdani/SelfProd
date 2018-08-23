@@ -5,10 +5,9 @@ using System.Threading.Tasks;
 
 namespace SelfProd.Entities.Models
 {
-    public class Journal
+    public class Note : BaseEntity
     {
-        public int JournalId { get; set; }
-        public string Entry { get; set; }
+        public string Text { get; set; }
         public DateTime Published { get; set; }
     }
 }
